@@ -2,13 +2,31 @@ const app = require('express')();
 const http = require('http').createServer(app)
 const socketio = require('socket.io')
 const io = socketio(http)
+const dotenv = require('dotenv')
+
 const { addUser, removeUser, getUser } = require('./helper')
+const Room = require('./models/Room')
+const Message = require('./models/Message')
+
 const PORT = process.env.PORT || 5000
 
+//connect to db
+require('./config/db')
+dotenv.config();
+
 io.on('connection', (socket) => {
-    console.log(socket.id)
+    //console.log(socket.id)
+
+    Room.find().then(result => {
+        socket.emit('output-rooms', result)
+    })
+
     socket.on('create-room', name => {
-        console.log('Then room name received is ', name)
+        //console.log('Then room name received is ', name)
+        const room = new Room({name})
+        room.save().then(result => {
+            io.emit('room-created', result)
+        })
     })
     socket.on('join', ({ name, room_id, user_id }) => {
         console.log(`User ${name} is trying to join room ${room_id}`);
@@ -18,7 +36,7 @@ io.on('connection', (socket) => {
             room_id,
             user_id
         });
-    
+        socket.join(room_id)
         if (error) {
             console.log('join error', error);
         } else {
@@ -29,7 +47,6 @@ io.on('connection', (socket) => {
         const user = getUser(socket.id, room_id);
 
         if (!user || !user.name) {
-            // Handle the case where the user or user.name is undefined
             console.error("Invalid user or user.name is undefined");
             return;
         }
@@ -42,8 +59,11 @@ io.on('connection', (socket) => {
         };
     
         console.log('message', msgToStore)
-        io.to(room_id).emit('message', msgToStore)
-        callback()
+        const msg = new Message(msgToStore)
+        msg.save().then(result => {
+            io.to(room_id).emit('message', result)
+            callback()
+        })
     })
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);

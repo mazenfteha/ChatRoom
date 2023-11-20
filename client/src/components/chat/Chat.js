@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import { UserContext } from '../../UserContext'
 import { Link, useParams } from 'react-router-dom'
 import io from 'socket.io-client'
+import Messages from './messages/Messages'
 let socket;
 
 function Chat() {
@@ -11,6 +12,8 @@ function Chat() {
   let {room_id, room_name} = useParams();
 
   const [message, setMessage] = useState('')
+
+  const [messages, sendMessages] = useState([])
 
   useEffect(() => {
     socket = io(ENDPT);
@@ -23,6 +26,13 @@ function Chat() {
         socket.disconnect();
     };
 }, [ENDPT, user.name, room_id, user.id]); // Empty dependency array ensures this effect runs once on mount
+
+  useEffect(()=> {
+    socket.on('message', message => {
+      sendMessages([...messages, message])
+    })
+  }, [messages])
+
   const sendMessage = event => {
     event.preventDefault();
     if(message) {
@@ -32,10 +42,13 @@ function Chat() {
       )
     }
   }
+
   return (
     <div>
       <div>{room_id} {room_name}</div>
       <h1>Chat {JSON.stringify(user)}</h1>
+      <pre>{JSON.stringify(messages,null, '\t')}</pre>
+      <Messages messages={messages} user_id= {user.id}/>
       <form action='' onSubmit={sendMessage}>
         <input type='text'
         value={message}
