@@ -1,0 +1,30 @@
+.row {
+  margin-bottom: 10px;
+}
+
+.sentbyme {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 5px 0;
+  display: inline-block;
+  max-width: 70%;
+}
+
+.opponent {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 15px;
+  margin: 5px 0;
+  display: inline-block;
+  max-width: 70%;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.left-align {
+  text-align: left;
+}

@@ -1,0 +1,31 @@
+
+.form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .input {
+    flex-grow: 1;
+    padding: 15px;
+    border: 2px solid #61dafb;
+    border-radius: 25px;
+    outline: none;
+  }
+  
+  .sendButton {
+    background-color: #61dafb;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .sendButton:hover {
+    background-color: #4fa3d1;
+  }
