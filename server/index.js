@@ -1,8 +1,20 @@
 const express = require('express')
 const app =express();
+const cors = require('cors')
 const authRoutes = require('./routes/authRoutes')
+const cookieParser = require('cookie-parser')
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+    optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(authRoutes);
+app.use(cookieParser())
+
 const http = require('http').createServer(app)
 const socketio = require('socket.io')
 const io = socketio(http)
@@ -17,6 +29,18 @@ const PORT = process.env.PORT || 5000
 //connect to db
 require('./config/db')
 dotenv.config();
+
+app.get('/set-cookies', (req, res) => {
+    res.cookie('username', 'Tony')
+    res.cookie('isAithenticated', true, { maxAge:24*60*30*1000 })
+    res.send('cookies are set')
+})
+
+app.get('/get-cookies', (req, res) => {
+    const cookies = req.cookies
+    console.log(cookies)
+    res.json(cookies)
+})
 
 io.on('connection', (socket) => {
     //console.log(socket.id)

@@ -26,3 +26,12 @@
 - Sign up and create user
 - Custom errors (error handling)
 - Get the values from the error object
+
+
+### #4 
+- Deal with the duplicate account error
+- Hash password before store using mongoose hock
+- Create route to Login and Signup page (Client-side)
+- Add the function and error messages to the signup page
+- Set and get cookies with options
+- Signup page call signup api from client
