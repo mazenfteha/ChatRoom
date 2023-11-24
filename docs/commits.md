@@ -35,3 +35,12 @@
 - Add the function and error messages to the signup page
 - Set and get cookies with options
 - Signup page call signup api from client
+
+
+### #5
+- Create JSON web token
+- Display error message
+- Redirect to homepage after signup
+- Create the login page and login function
+- Verify the user with the JWT Token
+

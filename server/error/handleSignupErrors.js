@@ -1,6 +1,15 @@
 const alertError = (err) => {
     let errors = {name : '', email: '', password: ''}
 
+    //login errors
+    if(err.message === 'incorrect email') {
+        errors.email = 'This email not found'
+    }
+
+    if(err.message === 'incorrect pwd') {
+        errors.password = 'This pas is incorrect'
+    }
+
     //duplicate account error
     if(err.code === 1100) {
         errors.email = 'This email already registered'

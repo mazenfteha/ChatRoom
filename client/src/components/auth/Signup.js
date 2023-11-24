@@ -1,6 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
+import { UserContext } from '../../UserContext'
+import {Navigate} from 'react-router-dom'
+
 
 const Signup = () => {
+    const { user, setUser } = useContext(UserContext)
+
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -10,22 +15,36 @@ const Signup = () => {
 
     const submitHandler = async e =>{
         e.preventDefault();
+        setNameError('')
+        setEmailError('')
+        setPasswordError('')
+
         console.log(name, email, password)
         try {
             const res = await fetch('http://localhost:5000/signup',{
                 method: 'POST',
+                credentials: 'include',
                 body: JSON.stringify({name, email, password}),
                 headers: {'Content-Type':'application/json'}
-
             })
             const data = await res.json();
             console.log(data)
+            if(data.errors){
+                if ('name' in data.errors) setNameError(data.errors.name);
+                if ('email' in data.errors) setEmailError(data.errors.email);
+                if ('password' in data.errors) setPasswordError(data.errors.password);
+            }
+            if(data.user) {
+                setUser(data.user)
+            }
         } catch (error) {
             console.log(error)
         }
-
     }
 
+    if(user) {
+        return <Navigate to="/" />
+    }
     return (
         <div className="row">
             <form className="col s12" onSubmit={submitHandler}>
@@ -36,8 +55,8 @@ const Signup = () => {
                         value={name}
                         onChange={e => setName(e.target.value)}
                         />
-                        <div className='name error red-text'>Name is required</div>
                         <label htmlFor="name">Name</label>
+                        <div className='name error red-text'>{nameError}</div>
                     </div>
                 </div>
                 <div className="row">
@@ -46,8 +65,8 @@ const Signup = () => {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         />
-                        <div className='email error red-text'>Email is required</div>
                         <label htmlFor="email">Email</label>
+                        <div className='email error red-text'>{emailError}</div>
                     </div>
                 </div>
                 <div className="row">
@@ -56,14 +75,13 @@ const Signup = () => {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         />
-                        <div className='password error red-text'>Password is required</div>
                         <label htmlFor="password">Password</label>
+                        <div className='password error red-text'>{passwordError}</div>
                     </div>
                 </div>
                 <button className='btn'> Signup </button>
             </form>
         </div>
-
     )
 }
 

@@ -21,13 +21,13 @@ function Chat() {
     socket = io(ENDPT);
 
     // Emit the 'join' event only once when the component mounts
-    socket.emit('join', { name: user.name, room_id, user_id: user.id });
+    socket.emit('join', { name: user.name, room_id, user_id: user._id });
 
     // Clean up the socket connection when the component is unmounted
     return () => {
         socket.disconnect();
     };
-}, [ENDPT, user.name, room_id, user.id]); // Empty dependency array ensures this effect runs once on mount
+}, [ENDPT, user.name, room_id, user._id]); // Empty dependency array ensures this effect runs once on mount
 
   useEffect(()=> {
     socket.on('message', message => {
@@ -48,7 +48,7 @@ function Chat() {
   return (
     <div className='outerContainer'>
       <div className='container'>
-      <Messages messages={messages} user_id= {user.id}/>
+      <Messages messages={messages} user_id= {user._id}/>
       <Input
       message={message}
       setMessage={setMessage}
