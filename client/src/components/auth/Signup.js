@@ -47,6 +47,7 @@ const Signup = () => {
     }
     return (
         <div className="row">
+            <h2>Signup</h2>
             <form className="col s12" onSubmit={submitHandler}>
                 <div className="row">
                     <div className="input-field col s12">

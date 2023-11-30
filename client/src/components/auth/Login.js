@@ -46,6 +46,7 @@ const Login = () => {
     }
     return (
         <div className="row">
+            <h2>Login</h2>
             <form className="col s12" onSubmit={submitHandler}>
                 <div className="row">
                     <div className="input-field col s12">

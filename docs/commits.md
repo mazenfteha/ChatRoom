@@ -44,3 +44,8 @@
 - Create the login page and login function
 - Verify the user with the JWT Token
 
+
+### #6
+- create logout api
+- condtional rendering
+- rmove unnecessary function
