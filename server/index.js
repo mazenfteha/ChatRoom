@@ -3,6 +3,8 @@ const app =express();
 const cors = require('cors')
 const authRoutes = require('./routes/authRoutes')
 const cookieParser = require('cookie-parser')
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json')
 
 const corsOptions = {
     origin: 'http://localhost:3000',
@@ -14,6 +16,10 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 app.use(authRoutes);
+
+
+//API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const http = require('http').createServer(app)
 const socketio = require('socket.io')

@@ -1,0 +1,190 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Chat Room",
+        "description": " chat room with React, Socket.io, Express and MongoDB ",
+        "version": "0.1.1"
+    },
+    "servers": [
+        {
+            "url": "http:/localhost:5000/",
+            "description": "develpe server"
+        }
+    ],
+    "components": {
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Access token is missing or invalid",
+                "content": {
+                "application/json": {
+                    "example": {
+                        "error": "Unauthorized",
+                        "message": "Access token is missing or invalid"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+            },
+            "OAuth2":{
+                "type": "oauth2",
+                "flows": {
+                    "authorizationCode": {
+                        "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
+                        "tokenUrl": "https://oauth2.googleapis.com/token",
+                        "scopes": {
+                            "openapi": "OpenID scope"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/":{
+            "get":{
+                "summary": "sent page : home page (chat page)",
+                "responses": {
+                    "234": {
+                        "description": "landing page"
+                    }
+                }
+            }
+        },
+        "/Signup": {
+            "post":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Register/Signup a new user",
+                "requestBody": {
+                    "description": "User registration request",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "name":{
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "email":{
+                                        "type": "string",
+                                        "required": true,
+                                        "uniqueItems": true
+                                    },
+                                    "password":{
+                                        "type": "string",
+                                        "required": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "User registered/created successfully"
+                    },
+                    "401":{
+                        "description": "Bad request, user registration failed",
+                        "$ref": "#/components/responses/UnauthorizedError" 
+                    }
+                }
+            }
+        },
+        "/verify":{
+            "get": {
+                "summary": "check user token",
+                "requestBody": {
+                    "description":"verification user token",
+                    "required": true
+                },
+                "responses": {
+                    "201":{
+                        "description": "Token verification successful. User now has access."
+                    },
+                    "400": {
+                        "description": "Error during Token verification"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "login user",
+                "requestBody" :{
+                    "description": "User login request",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema":{
+                                "type": "object",
+                                "properties": {
+                                    "email":{
+                                        "type": "string",
+                                        "required": true,
+                                        "uniqueItems": true
+                                    },
+                                    "password":{
+                                        "type": "string",
+                                        "required": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201":{
+                        "description": "User login successfully"
+                    },
+                    "401":{
+                        "description": "Bad request, user login failed",
+                        "$ref": "#/components/responses/UnauthorizedError" 
+                    }
+                }
+            }
+        },
+        "/logout" : {
+            "get":{
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "logout user",
+                "responses": {
+                    "200":{
+                        "description": "successfully logged out.",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "message": "Logged out successfully"
+                                }
+                            }
+                        }
+                    },
+                    "401":{
+                        "description": "Bad request, user logout failed",
+                        "$ref": "#/components/responses/UnauthorizedError" 
+                    }
+                }
+            }
+        }
+        
+    }
+}
